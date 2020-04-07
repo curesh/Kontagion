@@ -1,0 +1,309 @@
+1. Public Functions in the project
+
+Functions in StudentWorld------------------------
+
+    bool deleteDamagableObjects(double testX, double testY, int dmg);
+	This function applies dmg amount of damage to each object in the game that is allowed to be damaged by a projectile.
+    bool checkOverlap(double x1, double x2, double y1, double y2);
+	This function checks if two objects overlap based off of their locations and the sprite radii.
+    bool checkOverlapWithDirt(double x1, double x2, double y1, double y2);
+	This function checks if an object overlaps with a dirt object (where one of the coords passed in is the coords for a dirt object and the other coords is the other object)
+    void createRingOfFire();
+	Makes flames at 22 degree intervals around a specific location
+    void shootSpray();
+	Creates a spray object in front of socrates facing his direction
+    bool checkOverlapWithSocrates(double x, double y);
+	calls checkOverlap(...) but using socrates' location
+    void restoreHealth();
+	sets socrates' health to 100
+    void damageSocrates(int amt);
+	decreases socrates' health by amp
+    void addFlameThrowers();
+	calls socrates' add flames function to give him five more flames
+    void setPitsLeft(int set);
+	sets the m_pitsDone member variable to set.
+    int getPitsLeft();
+	gets the m_pitsDone member variable
+    bool overlapWithDirt(double bactLocX, double bactLocY);
+	checks if a given position overlaps with any of the dirt objects in the game
+    //return true if ate food
+    bool eatFoodIfThere(double bactLocX, double bactLocY);
+	if there is food at a given location, it sets its exist status to 0 and returns true. Otherwise, returns false
+    bool notWithinCircle(double newX, double newY, int rad);
+	returns whether or not a given coord is within the arena circle
+    //return -1 if no food can be found
+    int getDirToClosestFood(double bactLocX, double bactLocY);
+	returns the direction to the closest food object within128 units. If none, present, returns negative one.
+    //distMax gets updated with direction pointing towards Socrates
+    bool checkIfSocratesNearby(double x, double y, int& distMax);
+	returns whether or not socraetes is within distMax of the given position. If updates distMax reference to the direction towards 
+    int getDistBetween(double x1, double x2, double y1, double y2);
+	returns euclidean distance between two pairs of coords
+    void createObj(int x, int y, int objType);
+	creates an object of a given type represented by an integer
+    int getDirBetween(double x1, double x2, double y1, double y2);
+	Assuming (x1, y1) is the point of reference, this function returns the direction (as defined by the spec) that points to (x2, y2).
+    void bacteriaDied();
+	decrements m_bacteriaLeft by 1. 
+    int getNumBacteriaLeft();
+	returns the number of bacteria left
+
+
+Functions in Actor.h
+
+//Unusable Abstract classes
+
+class Actor : public GraphObject{
+public:
+    Actor(int imageID, double startX, double startY, int exists, StudentWorld *sw, Direction dir, int depth);
+    virtual ~Actor() = 0;
+    virtual int getExistStatus();
+	function returns the health of an actor object (m_exists). It returns a one if its alive and a 0 if its not. I made this virtual because I needed to make the setExist function virtual and I needed to uses a different member variable m_healthPoints in the updated setExist function, so I had to use that in this function too.
+    virtual void setExistStatus(int newExistStatus);
+	This function sets the m_exists to (bool)(newExistStatus). I made this virtual because I wanted to overload this function to keep track of how much health animate objects have.
+    virtual void doSomething() = 0;
+	I made this function pure virtual because all actors can do something but the actual "Actor" class doesn't make sense to do something. This does the do something protocol as outlined by the spec.
+    StudentWorld* getStudentWorld();
+	This function returns the student world pointer member variable that this object is stored in so that class inherited from actor can call student world functions.
+    virtual bool getDamagedByFlame();
+	Determines whether an object can be damaged by flame or not. I made it virtual because all actors can either be damaged or not. I didn't make it pure so that I can give it a definition here (and not later in some cases) for organizational purposes.
+    virtual bool isAnimate() = 0;
+	Determines whether an object is a living thing or not. Its pure virtual because every object is either be alive or not alive except for Actor.
+    virtual bool attractsBacteria();
+	Determines whether an object attracts bacteria or not. I made it virtual because all actors can either be damaged or not. I didn't make it pure so that I can give it a definition here (and not later in some cases) for organizational purposes
+};
+
+class Inanimate : public Actor{
+public:
+    virtual void doSomething();
+	I made this function virtual because most inanimate objects have the same doSomething protocol. This does the do something protocol as outlined by the spec.
+    virtual bool getDamagedByFlame();
+	Determines whether an object can be damaged by flame or not. I made it virtual because all actors can either be damaged or not. I didn't make it pure so that I can give it a definition here (and not later in some cases) for organizational purposes.
+    virtual bool isAnimate();
+	Determines whether an object is a living thing or not. Its virtual because every inherited object is either be alive or not alive.
+    virtual bool attractsBacteria();
+	Determines whether an object attracts bacteria or not. I made it virtual because all actors can either be damaged or not. I didn't make it pure so that I can give it a definition here (and not later in some cases) for organizational purposes
+};
+
+class Goodie : public Inanimate{ //and baddie (fungus)
+public:
+    virtual void actionToTake() = 0;
+	Differentiates between the specific action that should be done in the do something function for all the goodies. Pure virtual because Goodie doesn't have anything to differentiate.
+    void doSomething();
+	All the common aspects of the doSomething outlined in the spec for the goodies. It implements socrates stepping on the goodie so it deletes itself
+    virtual void playGoodieSound();
+	Plays sound when socrates steps on a goodie. Virtual because fungus has a different sound than the other three. Not pure for organization.
+
+};
+
+class Projectile : public Inanimate{
+public:
+    void doSomething();
+	Moves projectile forward in same direction unless it has travelled it's limit.
+    void decreaseTravelDist(int decr);
+	decreases the amount left to travel member var
+   bool getDamagedByFlame();
+	gets the ability to be damaged status for the projectiles.
+    
+
+};
+
+class Animate : public Actor{
+public:
+    virtual void doSomething() = 0;
+	I made this function pure virtual because all actors can do something but the actual "Actor" class doesn't make sense to do something. This does the do something protocol as outlined by the spec.
+    int getExistStatus();
+	overloaded the getExistStatus function to set it to access a new member variable of Animate that contains the health that the inherited objects have left. 
+    virtual void setExistStatus(int newExistStatus);
+	Sets the health left. Sets it to 0 if the health has gone negative, so that Boolean logic can be used on this functions output. Virtual because I needed to redefine it for socrates to also play the sounds when he is hurt or killed.
+    virtual bool getDamagedByFlame();
+	Determines whether an object can be damaged by flame or not. I made it virtual because all actors can either be damaged or not. I didn't make it pure so that I can give it a definition here (and not later in some cases) for organizational purposes.
+    virtual bool isAnimate();
+	Determines whether an object is a living thing or not. Its virtual because every inherited object is either be alive or not alive.
+    virtual void playHurtSound() = 0;
+	Plays sound when the object gets hurt. All alive objects have a sound for when they get hurt so I made this virtual. I made it pure because Animate isn't a real object in the game
+    virtual void playKilledSound() = 0;
+	Plays sound when the object gets killed. All alive objects have a sound for when they get killed so I made this virtual. I made it pure because Animate isn't a real object in the game.
+    virtual bool isBacteria() = 0;
+	Determines whether an object attracts bacteria or not. I made it virtual because all actors can either be damaged or not. I made it pure because the animate class isn't actually part of the game.
+};
+
+class Bacteria : public Animate{
+public:
+    virtual void doSomething();
+	I made this function virtual because most inanimate objects have the same doSomething protocol. This does the do something protocol as outlined by the spec.
+    void damageSocrates();
+    virtual bool differentiatedAttackSocrates();
+	Function that determines whether it should look for socrates at first and then if it should skip to the other step (noted in the spec). If it does need to do this it actually excecutes this task of attempting to move towards socrates. Virtual because usually this returns false except for aggressive salmonella where it would need to get updated.
+    virtual void differentiatedMovement();
+	Moves the bacteria if it has a movement plan. Otherwise, it finds the dir to closest food and moves it towards that if it can. Otherwise it moves randomly. Virtual because ecoli has a different movement plan.
+	
+    virtual void mitosis(double x, double y) = 0;
+	Pure virtual because it doesn't make sense in this game for a Bacteria object to split itself.
+    bool attempToMove(Direction dir, int distToMove, bool checkForBoundary);
+	Checks if moving in the given direction for a given distance would cause it to run into dirt. Also if checkForBoundary is true, then this function also checks if it would run out of arena bounds.
+    virtual void playHurtSound();
+	Plays hurt sound. Virtual because all bacteria have a hurt sound.
+    virtual void playKilledSound();
+	Plays killed sound. Virtual because all bacteria have a killed sound.
+   bool isBacteria();
+	returns whether its a bacteria or not (yes).
+
+
+};
+
+
+
+//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****
+//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****//****
+//Usable classes
+
+class Dirt : public Inanimate{
+public:
+    bool getDamagedByFlame();
+	Returns whether it can get damaged by flame or not
+    
+};
+
+class Food : public Inanimate{
+public:
+   bool attractsBacteria();
+	returns whether it can attract bacteria or not.
+};
+
+class Flame : public Projectile{
+public:
+
+};
+
+class Pit : public Inanimate{
+public:
+   void doSomething();
+	Releases the bacteria it has at random intervals.
+};
+
+class Spray : public Projectile{
+public:
+
+};
+
+class RestoreHealth : public Goodie{
+public:
+
+    void actionToTake();
+	Increases score and restores health of socrates.
+};
+
+class FlameThrowerGoodie : public Goodie{
+public:
+    void actionToTake();
+	Increases score and gives socrates five more flamethrowers.
+};
+
+class ExtraLife : public Goodie{
+public:
+
+    void actionToTake();
+	Increases score and gives socrates an extra life
+};
+
+class Fungus : public Goodie{
+public:
+
+    void actionToTake();
+	Decreases score and decreases storages life.
+    void playGoodieSound();
+	plays fungus sound
+};
+
+class RegSalmonella : public Bacteria{
+public:
+    void mitosis(double x, double y);
+	creates new RegSal at that point
+};
+class AggSalmonella : public Bacteria{
+public:
+    void mitosis(double x, double y);
+	creates new AggSal at that point
+    bool differentiatedAttackSocrates();
+	Checks for if socrates is nearby and if so tries to go near him. If not, returns false.
+
+};
+class EColi : public Bacteria{
+public:
+
+    void mitosis(double x, double y);
+	creates new ecoli at that coord
+    void differentiatedMovement();
+	hones in on socrates regardless of how far away from him it is.
+    void playHurtSound();
+	plays ecoli hurt sound
+    void playKilledSound();
+	plays ecoli killed sound
+};
+
+
+class Socrates : public Animate{
+public:
+    virtual void setExistStatus(int newExistStatus);
+	Sets the health left. Sets it to 0 if the health has gone negative, so that Boolean logic can be used on this functions output. Virtual because I needed to redefine it for socrates to also play the sounds when he is hurt or killed. If health has decreased, it plays the player hurt sound. If health has become 0, it plays the player killed sound.
+    void doSomething();
+	Takes in keyboard input and decides if it should create flames, move clockwise, move counter clockwise, or shoot spray. Otherwise increases sprays it has.
+    void decrementSprayCharges();
+	Decreases amount of sprays it has.
+    void decrementFlameThrowerCharges();
+	Decreases amount of flames it has.
+    void addFlames();
+	Adds five flames to how much it has
+    int getNSprays();
+	Gets amount of sprays it has
+    int getNFlames();
+	gets amount of flames it has
+    bool getDamagedByFlame();
+	returns whether it can be damaged by flames or not
+    void playHurtSound();
+	plays socrates hurt sound
+    void playKilledSound();
+	plays socrates killed sound
+    bool isBacteria();
+	returns whether its a bacteria or not
+};
+
+2. N/A
+
+3. Assumptions:
+The spec didn't specify whether we should call the doSomething function for objects that were created during the current tick. I chose to call the doSomething function for these objects.
+
+
+4. How I tested Each of My Classes
+
+StudentWorld
+	Since the studentWorld Class basically runs the entire game, one of the important ways to test this class is by just running the game and visually checking if it runs as expected. I also checked each of the public member functions independently to see if they were behaving correctly. I checked the scoreboard of my game visually against the demo scoreboard to see if it matched. I checked if the spawning of dirt were random by running multiple tests. I tested whether it returned player died when socrates had lost all hp. I tested whether it returned next level if all the bacteria (including the ones in the pit had been set to not existing. I tested whether the ticks continued normally until either of these last two events happened.
+
+Dirt
+	I checked if the dirt spawned in the right orientation. I checked if they were able to get damaged by projectiles. I checked if they were created and destroyed appropriately by seeing if they disappeared when shot. I checked if they spawned randomly throughout the map (with overlap) by running multiple sessions of the game. I tested to make sure they didn't spawn where socrates would be moving (or beyond). I tested the quantity of dirt spawned and made sure they scaled appropriately with the level.  
+Food
+	I tested whether the food spawned in the correct orientation. I checked whether the food was able to not get damaged by the projectiles. I checked if they spawned randomly throughout the map (without overlap) by running multiple sessions of the game. I tested to make sure they didn't spawn where socrates would be moving (or beyond). I tested to make sure they disappeared when they would overlap with the bacteria. I tested the quantity of food spawned and made sure it scaled appropriately with the level.
+Flame
+	I tested whether it would spawn exactly in 16 directions 22 degrees apart starting with where socrates is by running it alongside the demo and comparing visually. I tested if it travelled the correct amount of distance, the same way. I also tested if it destroyed correctly after traveling its maximum distance. I tested whether it destroyed itself immediately if it overlapped with a destroyable object (visually).
+Pit
+	I tested whether it spawned the bacteria at the correct frequencies and at the correct probabilities by running multiple game sessions. I tested whether the pit destroyed itself after releasing all the bacteria (visually tested). I tested whether the amount of pits in a level equalled the level number. I tested whether the game could not end even if all the bacteria on the screen was killed, while there was still bacteria in the pit.
+Spray
+	I tested whether it would spawn in front of socrates facing the same direction where socrates is facing by running it alongside the demo and comparing visually. I tested if it travelled the correct amount of distance, the same way. I also tested whether it went the correct amount of distance in between each tick (visually tested). I also tested if it destroyed correctly after traveling its maximum distance. I tested whether it destroyed itself immediately if it overlapped with a destroyable object (visually).
+RestoreHealth
+	I tested whether it appears with the right probability amongst the other goodies. I tested whether it gave the right amount of points. I tested whether it would disappear when only socrates overlaps with it by moving socrates into it. I tested whether it restored the health all the way to a 100 regardless of what health I initially had by moving socrates onto it under different circumstances. I tested whether it work properly even when socrates is at 100 health already. 
+ExtraLife Goodie
+	I tested whether it appears with the right probability amongst the other goodies. I tested whether it gave the right amount of points. I tested whether it would disappear when only socrates overlaps with it by moving socrates into it. I tested whether it gave an extra life regardless of how many lives I had right now. I tested whether the extra life actually had an effect by getting one and then losing three lives to see if the game would end. I checked if the scoreboard updated correctly I made sure it wouldn't get destroyed by bacteria or flames or sprays.automa
+Fungus
+	I tested whether it appears with the right probability amongst the other goodies. I tested whether it took the right amount of points. I tested whether it would disappear when only socrates overlaps with it by moving socrates into it. I tested whether it lowered the life the correct amount. I tested if it correctly set socrates to dead if he had less than 20 hp left by seeing if the level would reset (or game would end) if I made socrates walk into it. I tested whether  I checked if the scoreboard updated correctly. I made sure it wouldn't get destroyed by bacteria or flames or sprays.
+RegSalmonella
+	I tested if the motion behaved as outlined by the specification (random motion heading towards food). I made sure the salmonella reset its motion when it hit dirt or the edge of the arena. I made sure it split once it ate three food by letting the game run. I tested if it correctly set socrates to dead if the salmonella had done enough damage to kill him seeing if the level would reset (or game would end) if I made socrates walk into it. I made sure it had a 50 % chance of spawning a food object upon destruction. I made sure it was able to be destroyed by flames and sprays and would delete itself upon overlap. I tested whether it played the right sounds upon being damaged or killed.
+
+AggSalmonella
+	I tested if the motion behaved as outlined by the specification (random motion heading towards food until it nears socrates). I tested whether once it is within range of socrates it would attempt to follow him. I tested that if it was within range but was blocked by socrates it would still be facing the direction towards socrates. I made sure it split once it ate three food by letting the game run. I tested if it correctly set socrates to dead if the salmonella had done enough damage to kill him seeing if the level would reset (or game would end) if I made socrates walk into it. I made sure it had a 50 % chance of spawning a food object upon destruction. I made sure it was able to be destroyed by flames and sprays and would delete itself upon overlap. I tested whether it played the right sounds upon being damaged or killed.
+
+Ecoli
+	I tested if the motion behaved as outlined by the specification (constantly homing in on socrates if it could). I tested that if it was within range but was blocked by a dirt it would still be facing the direction towards socrates. I made sure it split once it ate three food by letting the game run. I tested if it correctly set socrates to dead if the salmonella had done enough damage to kill him seeing if the level would reset (or game would end) if I made socrates walk into it. I made sure it had a 50 % chance of spawning a food object upon destruction. I made sure it was able to be destroyed by flames and sprays and would delete itself upon overlap. I tested whether it played the right sounds upon being damaged or killed.
+Socrates
+	I tested whether his movement was working accurately by making it go a full circle around the circular arena by pressing one of the motion keys a specific number of times (calculated using information provided in the spec). I tested whether it created 16 flames at 22 degree intervals when the enter button is pressed. I tested whether the enter button does nothing if the player has run out of flames. I tested whether he released a spray properly if the space bar was pressed. I tested to make sure that a new spray wasn't added if the spray was called for in consecutive ticks. I tested whether no sprays were released when the spacebar was pressed while the player had no sprays left. I tested whether it decreased (or increased) its health appropriately when interacting with other objects and made sure it destructed properly when it had reached 0 health. I tested whether it played the right sounds upon being damaged or killed.
+
