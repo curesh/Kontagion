@@ -4,5 +4,11 @@ Alas! Plague has befallen the land. Livestock are dropping like flies and great 
 
 # How to Play
 
-## [Install](http://freeglut.sourceforge.net/docs/install.php) freeglut software
+1. [Install](http://freeglut.sourceforge.net/docs/install.php) freeglut software
+
+2. Install Xcode if you don't already have it
+
+3. Clone this repository to a directory of your choice
+
+4. Open Kontagion.xcodeproj on xcode and run.
 
