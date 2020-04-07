@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>logFormatVersion</key>
+	<integer>10</integer>
+	<key>logs</key>
+	<dict>
+		<key>0867FEAE-0570-48A8-8891-6FB9C1E54961</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogMajorGroupSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.target.product-type.tool</string>
+			<key>fileName</key>
+			<string>0867FEAE-0570-48A8-8891-6FB9C1E54961.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>signature</key>
+			<string>Kontagion-bhoflqhrgsgvoffstungnwgcwvfj</string>
+			<key>timeStartedRecording</key>
+			<real>603501508.71388996</real>
+			<key>timeStoppedRecording</key>
+			<real>603501510.42954504</real>
+			<key>title</key>
+			<string>Build target Kontagion</string>
+			<key>uniqueIdentifier</key>
+			<string>0867FEAE-0570-48A8-8891-6FB9C1E54961</string>
+		</dict>
+		<key>3A83E340-B348-4BA9-B15E-3E42B8E47FEF</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogMajorGroupSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.target.product-type.tool</string>
+			<key>fileName</key>
+			<string>3A83E340-B348-4BA9-B15E-3E42B8E47FEF.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>signature</key>
+			<string>Kontagion-acmrtmoickbshqbflasisoenyyad</string>
+			<key>timeStartedRecording</key>
+			<real>607932517.95072901</real>
+			<key>timeStoppedRecording</key>
+			<real>607932520.38521099</real>
+			<key>title</key>
+			<string>Build target Kontagion</string>
+			<key>uniqueIdentifier</key>
+			<string>3A83E340-B348-4BA9-B15E-3E42B8E47FEF</string>
+		</dict>
+		<key>B6FF9125-03CB-461E-B101-192CEE57F0E5</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogMajorGroupSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.target.product-type.tool</string>
+			<key>fileName</key>
+			<string>B6FF9125-03CB-461E-B101-192CEE57F0E5.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>signature</key>
+			<string>Kontagion-euahubqkpqaijpbczojxvfdvxjai</string>
+			<key>timeStartedRecording</key>
+			<real>604469920.98178005</real>
+			<key>timeStoppedRecording</key>
+			<real>604469922.87119305</real>
+			<key>title</key>
+			<string>Build target Kontagion</string>
+			<key>uniqueIdentifier</key>
+			<string>B6FF9125-03CB-461E-B101-192CEE57F0E5</string>
+		</dict>
+	</dict>
+	<key>preserveOldLogs</key>
+	<true/>
+</dict>
+</plist>
