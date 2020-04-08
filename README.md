@@ -12,3 +12,5 @@ Alas! Plague has befallen the land. Livestock are dropping like flies and great 
 
 4. Open Kontagion.xcodeproj on xcode and run.
 
+### Notes
+Project 3 for CS32 Class at UCLA
