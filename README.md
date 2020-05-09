@@ -14,3 +14,6 @@ Alas! Plague has befallen the land. Livestock are dropping like flies and great 
 
 ### Notes
 Project 3 for CS32 Class at UCLA
+Here is the project [specification](https://drive.google.com/open?id=1Di6JbdOh0K76attFRyn0G_pxqjSPJsHW).
+
+
